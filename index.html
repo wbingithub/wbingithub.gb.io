@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas 插入图片</title>
+    <style>
+        body{
+            background-color: #000;
+        }
+        canvas{
+            background-color: #fff;
+        }
+        #img{display: none;}
+    </style>
+    <script>
+        window.onload = function(){
+            var c = document.getElementById("my-canvas");
+            var aImg = document.getElementById("img");
+            var ctx = c.getContext("2d");
+
+            //var o = new images();
+            ctx.drawImage(aImg,0,0,200,200);
+        }
+    </script>
+</head>
+<body>
+<canvas width="400" height="400" id="my-canvas"></canvas>
+<img src="01.jpg" alt="" id="img">
+</body>
+</html>
