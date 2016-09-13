@@ -2,29 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>canvas 插入图片</title>
+    <title>Document</title>
     <style>
-        body{
-            background-color: #000;
-        }
-        canvas{
-            background-color: #fff;
-        }
-        #img{display: none;}
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
     </style>
-    <script>
-        window.onload = function(){
-            var c = document.getElementById("my-canvas");
-            var aImg = document.getElementById("img");
-            var ctx = c.getContext("2d");
-
-            //var o = new images();
-            ctx.drawImage(aImg,0,0,200,200);
-        }
-    </script>
 </head>
 <body>
-<canvas width="400" height="400" id="my-canvas"></canvas>
-<img src="01.jpg" alt="" id="img">
+    <div id="allmap"></div>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=AYjL6HEqG1oXZHgUfRnYAwgZ&services=&t=20160804144823"></script>
+    <script type="text/javascript">
+        // 百度地图API功能
+        function Map(x,y){
+            var map = new BMap.Map("allmap");
+            var point = new BMap.Point(x,y);
+            map.centerAndZoom(point, 15);
+            var marker = new BMap.Marker(point);  // 创建标注
+            map.addOverlay(marker);               // 将标注添加到地图中
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        }
+            
+    </script>
+
+    <script>
+        var oDiv = document.getElementById("allmap"); 
+        if(navigator.geolocation){
+            console.log('你的浏览器支持使用HTML5来获取地理位置信息');
+            getPosition();
+        }else{
+            console.log('你的浏览器不支持使用HTML5来获取地理位置信息');
+        }
+        function getPosition(){//HTML5获取地理位置信息
+            navigator.geolocation.getCurrentPosition(
+                function(position){//获取地理位置信息成功时做处理
+                    var coords = position.coords;
+                    console.log("十进制数的纬度 ："+coords.latitude);
+                    console.log("十进制数的经度 ："+coords.longitude);
+                    console.log("位置精度 ："+coords.accuracy);
+                    console.log("海拔 ："+coords.altitude);
+                    console.log("位置的海拔精度 ："+coords.altitudeAccuracy);
+                    console.log("方向 ："+coords.heading);
+                    console.log("速度 ："+coords.speed);
+                    console.log("响应的时间 ："+position.timestamp);
+                    var x = coords.latitude;
+                    var y = coords.longitude;
+                    console.log(x+" : "+y);
+                    Map(y,x);
+                },
+                function(error){//获取地理位置信息失败时做处理
+                    //console.log(error);
+                    var errorTypes = {
+                        1:'用户拒绝了位置服务',
+                        2:'获取不到位置信息',
+                        3:'获取信息超时错误'
+                    };
+                    console.log(errorTypes[error.code]+'：不能确定你的当前地理位置');
+                    //console.log(error.message);
+                },
+                {//以下是可选属性
+                    // 设置缓存有效时间为2分钟
+                    maximumAge:60*1000*2,
+                    //5秒钟未获取到地理位置信息则返回错误
+                    timeout:30000
+                }
+            );
+        }
+    </script>
 </body>
 </html>
